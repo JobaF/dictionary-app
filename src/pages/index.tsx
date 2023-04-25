@@ -39,7 +39,7 @@ export default function Home() {
     }
     if (isSuccess) {
       return (
-        <div className="flex flex-col text-xl gap-5 pl-5">
+        <div className="flex flex-col gap-5 shadow-lg p-8 rounded-lg bg-gray-200">
           <p className="font-bold text-3xl">{data && data[0].word}</p>
           <p className="font-bold text-3xl">
             {data[0].phonetic && data[0].phonetic}
@@ -51,7 +51,7 @@ export default function Home() {
                   <p className="text-2xl font-bold my-4">
                     {meaning.partOfSpeech}
                   </p>
-                  <ul className="list-disc list-inside flex flex-col gap-3 text-justify pr-10">
+                  <ul className="list-disc list-outside flex flex-col gap-3 text-justify text-md pl-5">
                     {meaning.definitions?.slice(0, 3).map((definition, i) => (
                       <li key={i}>{definition.definition}</li>
                     ))}
@@ -67,7 +67,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2 pt-5">
+    <div className="flex flex-col items-center gap-2 pt-5 bg-gray-100 min-h-screen h-full">
       <h1 className="text-xl">Search for a word: </h1>
       <input
         className="w-1/5 h-8 shadow-lg border rounded-lg border-gray-400 px-3"
@@ -75,7 +75,7 @@ export default function Home() {
         value={searchValue}
         onChange={handleChange}
       />
-      {renderResult()}
+      <div className="w-3/4 m-3">{renderResult()}</div>
     </div>
   );
 }
