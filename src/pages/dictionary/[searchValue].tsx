@@ -7,7 +7,8 @@ import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { z } from "zod";
 import useSound from "use-sound";
-import { PlayFunction } from "use-sound/dist/types";
+import { PlayIcon } from "@/components/PlayIcon";
+import { PauseIcon } from "@/components/PauseIcon";
 
 type DictionaryResponse = z.infer<typeof DictionaryResponseSchema>;
 
@@ -22,6 +23,7 @@ interface dictionaryEntryProps {
   data: DictionaryResponse | null;
   searchValue: string;
   isError: boolean;
+  soundURL?: string | null;
 }
 
 const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
@@ -35,22 +37,18 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
     enabled: !props.isError,
   });
 
-  const firstDataEntry = data && data[0];
-  const soundURL = firstDataEntry?.phonetics.find(
-    (o) => o["audio"] !== undefined && o["audio"].length > 1
-  )?.audio;
-  const [play, { isPlaying }] = useSound(soundURL as string);
+  const [play, { duration }] = useSound(props.soundURL as string);
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputSearchValue(event.currentTarget.value.toLowerCase());
   };
 
-  function handleSubmit(
+  const handleSubmit = (
     event: FormEvent<HTMLFormElement>,
     searchValue: string
-  ): void {
+  ): void => {
     event.preventDefault();
     router.push("/dictionary/" + searchValue);
-  }
+  };
 
   const renderResult = () => {
     if (isLoading) {
@@ -69,25 +67,12 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
                 {data && data[0].phonetic && data[0].phonetic}
               </p>
             </div>
-            {soundURL && (
+            {props.soundURL && (
               <button
                 onClick={() => play()}
                 className="w-16 h-16 rounded-full bg-purple-300 hover:bg-purple-900 focus:outline-none flex justify-center items-center"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#a445ed"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="#a445ed"
-                  className="w-1/2 h-3/4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                  />
-                </svg>
+                {<PlayIcon />}
               </button>
             )}
           </div>
@@ -161,11 +146,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const searchValue = context.params?.searchValue as string;
   try {
     const data = await getDictionaryEntry(searchValue);
+    const firstDataEntry = data && data[0];
+    const soundURL = firstDataEntry.phonetics.find(
+      (o) => o["audio"] !== undefined && o["audio"].length > 1
+    )?.audio
+      ? firstDataEntry.phonetics.find(
+          (o) => o["audio"] !== undefined && o["audio"].length > 1
+        )?.audio
+      : null;
     return {
       props: {
         data,
         searchValue,
         isError: false,
+        soundURL,
       },
     };
   } catch {
