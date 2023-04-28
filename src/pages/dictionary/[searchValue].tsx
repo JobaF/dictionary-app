@@ -31,6 +31,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 	const [inputSearchValue, setInputSearchValue] = useState<string>("")
 	const router = useRouter()
 	const { searchValue } = props
+	const [soundIsPlaying, setSoundIsPlaying] = useState<boolean>(false)
 	const { isLoading, isError, isSuccess, data } = useQuery({
 		queryKey: ["dictionaryEntry", searchValue],
 		queryFn: () => getDictionaryEntry(searchValue),
@@ -42,6 +43,16 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setInputSearchValue(event.currentTarget.value.toLowerCase())
 	}
+
+	useEffect(() => {
+		if (soundIsPlaying) {
+			play()
+			const playingSoundInterval = setInterval(() => {
+				setSoundIsPlaying(false)
+			}, duration!)
+			return () => clearInterval(playingSoundInterval)
+		}
+	}, [soundIsPlaying])
 
 	const handleSubmit = (
 		event: FormEvent<HTMLFormElement>,
@@ -70,10 +81,11 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 						</div>
 						{props.soundURL && (
 							<button
-								onClick={() => play()}
+								disabled={soundIsPlaying}
+								onClick={() => setSoundIsPlaying(true)}
 								className="w-16 h-16 rounded-full bg-purple-300 hover:bg-purple-900 focus:outline-none flex justify-center items-center"
 							>
-								{<PlayIcon />}
+								{soundIsPlaying ? <PauseIcon /> : <PlayIcon />}
 							</button>
 						)}
 					</div>
@@ -116,7 +128,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 							))}
 					</div>
 					<hr className="bg-gray-300 opacity-100 dark:opacity-50 w-full h-0.5" />
-					<div className="mt-4">
+					<div className=" h-8 mt-8">
 						<span className="text-gray-500 mr-4"> Source </span>
 						{data && (
 							<a className="underline" href={data[0].sourceUrls[0]}>
@@ -152,7 +164,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 					</button>
 				</div>
 			</form>
-			<div className="xs:w-max sm:w-3/4 md:w-1/2 2xl:w-1/3 m-3">
+			<div className="xs:w-max sm:w-3/4 lg:w-1/2 2xl:w-1/3 m-3">
 				{!props.isError && renderResult()}
 			</div>
 		</div>
