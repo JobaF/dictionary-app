@@ -9,6 +9,7 @@ import { z } from "zod"
 import useSound from "use-sound"
 import { PlayIcon } from "@/components/PlayIcon"
 import { PauseIcon } from "@/components/PauseIcon"
+import { spawn } from "child_process"
 
 type DictionaryResponse = z.infer<typeof DictionaryResponseSchema>
 
@@ -87,25 +88,41 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 										<hr className="bg-gray-300 opacity-100 dark:opacity-50 w-full h-0.5" />
 									</div>
 									<p className="text-lg font-light mb-4">Meaning</p>
-									<ul className="list-disc list-outside marker:text-purple-700 flex flex-col gap-3 text-justify text-md pl-7 sm:pr-10 mb-8">
+									<ul className="list-disc list-outside marker:text-purple-700 flex flex-col gap-3 text-justify text-md pl-7 sm:pr-10 mb-4">
 										{meaning.definitions?.slice(0, 3).map((definition, i) => (
-											<li key={i} className="pl-2">
-												{definition.definition}
-											</li>
+											<div key={i}>
+												<li className="pl-2">{definition.definition}</li>
+												{definition.example && (
+													<div className="mt-3 mb-3 text-gray-500">
+														{`"` + definition.example + `"`}
+													</div>
+												)}
+											</div>
 										))}
 									</ul>
 									{meaning.synonyms[0] && (
-										<div className="text-lg font-light flex">
-											Synonyms{" "}
+										<div className="text-lg font-light">
+											Synonyms:{" "}
 											<span className="text-purple-700 pl-5">
-												{meaning.synonyms.slice(0, 4).map((synonym) => (
-													<span className="">{synonym + " / "}</span>
+												{meaning.synonyms.slice(0, 4).map((synonym, i) => (
+													<span key={"synonym" + i} className="mr-2">
+														{synonym}
+													</span>
 												))}
 											</span>
 										</div>
 									)}
 								</div>
 							))}
+					</div>
+					<hr className="bg-gray-300 opacity-100 dark:opacity-50 w-full h-0.5" />
+					<div className="mt-4">
+						<span className="text-gray-500 mr-4"> Source </span>
+						{data && (
+							<a className="underline" href={data[0].sourceUrls[0]}>
+								{data[0].sourceUrls[0]}
+							</a>
+						)}{" "}
 					</div>
 				</div>
 			)
