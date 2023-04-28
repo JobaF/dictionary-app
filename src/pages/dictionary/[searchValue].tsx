@@ -56,10 +56,11 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 
 	const handleSubmit = (
 		event: FormEvent<HTMLFormElement>,
-		searchValue: string
+		inputSearchValue: string
 	): void => {
 		event.preventDefault()
-		router.push("/dictionary/" + searchValue)
+		if (inputSearchValue !== searchValue)
+			router.push("/dictionary/" + inputSearchValue)
 	}
 
 	const renderResult = () => {
@@ -152,7 +153,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 			>
 				<div className="relative flex items-center h-10">
 					<input
-						className="w-full h-full shadow-sm border rounded-lg border-gray-200 px-3"
+						className="w-full h-full shadow-sm border rounded-lg border-gray-200 px-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
 						type="text"
 						value={inputSearchValue}
 						onChange={handleChange}
@@ -164,7 +165,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 					</button>
 				</div>
 			</form>
-			<div className="xs:w-max sm:w-3/4 lg:w-1/2 2xl:w-1/3 m-3">
+			<div className="xs:w-max sm:w-3/4 lg:w-1/2 2xl:w-1/3 m-3 sm:border sm:border-purple-200 sm:rounded-md">
 				{!props.isError && renderResult()}
 			</div>
 		</div>
