@@ -9,7 +9,9 @@ import { z } from "zod"
 import useSound from "use-sound"
 import { PlayIcon } from "@/components/PlayIcon"
 import { PauseIcon } from "@/components/PauseIcon"
-import { spawn } from "child_process"
+import { BookIcon } from "@/components/BookIcon"
+import { SunIcon } from "@/components/SunIcon"
+import { MoonIcon } from "@/components/MoonIcon"
 
 type DictionaryResponse = z.infer<typeof DictionaryResponseSchema>
 
@@ -27,11 +29,15 @@ interface dictionaryEntryProps {
 	soundURL?: string | null
 }
 
+type Font = "serif" | "sans" | "mono"
+
 const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 	const [inputSearchValue, setInputSearchValue] = useState<string>("")
+	const [fontSelectValue, setFontSelectValue] = useState<Font>("sans")
 	const router = useRouter()
 	const { searchValue } = props
 	const [soundIsPlaying, setSoundIsPlaying] = useState<boolean>(false)
+	const [isDarkMode, setIsDarkMode] = useState<boolean>(false)
 	const { isLoading, isError, isSuccess, data } = useQuery({
 		queryKey: ["dictionaryEntry", searchValue],
 		queryFn: () => getDictionaryEntry(searchValue),
@@ -42,6 +48,13 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 	const [play, { duration }] = useSound(props.soundURL as string)
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setInputSearchValue(event.currentTarget.value.toLowerCase())
+	}
+	const handleFontChange = (event: ChangeEvent<HTMLSelectElement>) => {
+		setFontSelectValue(event.target.value as Font)
+	}
+
+	const toggleDarkMode = () => {
+		setIsDarkMode((prev) => !prev)
 	}
 
 	useEffect(() => {
@@ -72,7 +85,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 		}
 		if (isSuccess) {
 			return (
-				<div className="flex flex-col shadow-md p-8 rounded-lg">
+				<div className="flex flex-col sm:shadow-md p-8 sm:rounded-lg">
 					<div className="flex items-center justify-between">
 						<div>
 							<p className="font-bold text-5xl mb-2">{data && data[0].word}</p>
@@ -144,8 +157,27 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
 	}
 
 	return (
-		<div className="flex flex-col items-center gap-2 pt-5 bg-gray-100 min-h-screen h-full">
-			<h1 className="text-xl">Search for a word: </h1>
+		<div
+			className={`font-${fontSelectValue} flex flex-col items-center gap-2 bg-gray-100 min-h-screen h-full `}
+		>
+			<div className="text-xl w-full h-14 flex items-center justify-center">
+				<BookIcon />
+				<select
+					value={fontSelectValue}
+					onChange={handleFontChange}
+					className="bg-gray-50 text-sm md:text-lg rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300 p-2.5 "
+				>
+					<option value="serif">Serif</option>
+					<option value="sans">Sans</option>
+					<option value="mono">Monospace</option>
+				</select>
+				<button
+					onClick={toggleDarkMode}
+					className="w-10 h-10 p-1 rounded-full flex justify-center items-center "
+				>
+					{isDarkMode ? <MoonIcon /> : <SunIcon />}
+				</button>
+			</div>
 			<form
 				action="submit"
 				onSubmit={(e) => handleSubmit(e, inputSearchValue)}
