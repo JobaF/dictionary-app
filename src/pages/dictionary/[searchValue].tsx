@@ -160,7 +160,6 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
     return <></>;
   };
   if (!mounted) return null;
-
   return (
     <div
       className={`${fontSelectValue} flex flex-col items-center gap-2 bg-gray-100 min-h-screen h-full dark:bg-gray-800`}
@@ -178,7 +177,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
         </select>
         <button
           onClick={toggleDarkMode}
-          className="w-10 h-10 p-1 rounded-full flex justify-center items-center "
+          className="w-10 h-10 p-1 rounded-full flex justify-center items-center border"
         >
           {theme === "dark" ? <MoonIcon /> : <SunIcon />}
         </button>
@@ -202,9 +201,14 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
           </button>
         </div>
       </form>
-      <div className="xs:w-max sm:w-3/4 lg:w-1/2 2xl:w-1/3 m-3 sm:border sm:border-purple-200 sm:rounded-md dark:bg-gray-700">
-        {!props.isError && renderResult()}
-      </div>
+
+      {props.isError ? (
+        <p className="text-xl mt-5">{searchValue} was not found.</p>
+      ) : (
+        <div className="xs:w-max sm:w-3/4 lg:w-1/2 2xl:w-1/3 m-3 sm:border sm:border-purple-200 sm:rounded-md dark:bg-gray-700">
+          {renderResult()}
+        </div>
+      )}
     </div>
   );
 };
@@ -234,7 +238,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch {
     return {
       props: {
-        data: "",
+        data: null,
         searchValue,
         isError: true,
       },
