@@ -162,9 +162,9 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
   if (!mounted) return null;
   return (
     <div
-      className={`${fontSelectValue} flex flex-col items-center gap-2 bg-gray-100 min-h-screen h-full dark:bg-gray-800 pt-4`}
+      className={`${fontSelectValue} flex flex-col items-center gap-2 bg-gray-100 min-h-screen h-full dark:bg-gray-800 pt-4 gap-4`}
     >
-      <div className="text-xl min-w-min w-2/3 md:w-1/2 xl:w-1/4 h-14 flex items-center justify-between">
+      <div className="text-xl min-w-min w-3/4 md:w-1/2 xl:w-1/4  h-14 flex items-center justify-between">
         <BookIcon isDarkMode={theme === "dark"} />
         <select
           value={fontSelectValue}
@@ -185,7 +185,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
       <form
         action="submit"
         onSubmit={(e) => handleSubmit(e, inputSearchValue)}
-        className="min-w-min w-2/3 md:w-1/2 xl:w-1/4 dark:bg-gray-600 rounded-full mt-4"
+        className="min-w-min w-3/4 md:w-1/2 xl:w-1/4 dark:bg-gray-600 rounded-full "
       >
         <div className="relative flex items-center h-10 ">
           <input
