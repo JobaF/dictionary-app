@@ -8,7 +8,7 @@ import { ThemeProvider } from "next-themes";
 export default function App({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
   return (
-    <ThemeProvider attribute="class">
+    <ThemeProvider attribute="class" enableSystem={false}>
       <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps.dehydratedState}>
           <NextNProgress color="#a445ed" height={4} />
