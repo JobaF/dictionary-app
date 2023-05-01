@@ -5,8 +5,8 @@ export const SunIcon = () => {
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={1.5}
-      stroke="red"
-      className="p-1 w-full h-full rounded-full bg-gray-100"
+      stroke="black"
+      className=" w-full h-full rounded-full bg-gray-100"
     >
       <path
         strokeLinecap="round"

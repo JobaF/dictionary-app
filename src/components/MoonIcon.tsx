@@ -6,7 +6,7 @@ export const MoonIcon = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="p-2 w-full h-full rounded-full bg-gray-100 dark:bg-gray-700"
+      className="p-1 w-full h-full rounded-full"
     >
       <path
         strokeLinecap="round"

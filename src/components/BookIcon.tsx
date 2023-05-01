@@ -1,11 +1,11 @@
-export const BookIcon = ({ darkMode }: { darkMode: boolean }) => {
+export const BookIcon = ({ isDarkMode }: { isDarkMode: boolean }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={1}
-      stroke={darkMode ? "white" : "rgb(55, 0, 81)"}
+      stroke={isDarkMode ? "rgb(192, 132, 252)" : "rgb(55, 0, 81)"}
       className="h-3/4 rounded-full p-1"
     >
       <path

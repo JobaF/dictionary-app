@@ -76,7 +76,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
     inputSearchValue: string
   ): void => {
     event.preventDefault();
-    if (inputSearchValue !== searchValue)
+    if (inputSearchValue !== searchValue && inputSearchValue.length > 0)
       router.push("/dictionary/" + inputSearchValue);
   };
 
@@ -93,7 +93,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="font-bold text-5xl mb-2">{data && data[0].word}</p>
-              <p className="text-2xl text-purple-700">
+              <p className="text-2xl text-purple-700 dark:text-purple-400">
                 {data && data[0].phonetic && data[0].phonetic}
               </p>
             </div>
@@ -118,7 +118,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
                     <hr className="bg-gray-300 opacity-100 dark:opacity-50 w-full h-0.5" />
                   </div>
                   <p className="text-lg font-light mb-4">Meaning</p>
-                  <ul className="list-disc list-outside marker:text-purple-700 flex flex-col gap-3 text-justify text-md pl-7 sm:pr-10 mb-4">
+                  <ul className="list-disc list-outside marker:text-purple-700 dark:marker:text-purple-500 flex flex-col gap-3 text-justify text-md pl-7 sm:pr-10 mb-4">
                     {meaning.definitions?.slice(0, 3).map((definition, i) => (
                       <div key={i}>
                         <li className="pl-2">{definition.definition}</li>
@@ -133,7 +133,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
                   {meaning.synonyms[0] && (
                     <div className="text-lg font-light">
                       Synonyms:{" "}
-                      <span className="text-purple-700 pl-5">
+                      <span className="text-purple-700 dark:text-purple-400 pl-5">
                         {meaning.synonyms.slice(0, 4).map((synonym, i) => (
                           <span key={"synonym" + i} className="mr-2">
                             {synonym}
@@ -162,14 +162,14 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
   if (!mounted) return null;
   return (
     <div
-      className={`${fontSelectValue} flex flex-col items-center gap-2 bg-gray-100 min-h-screen h-full dark:bg-gray-800`}
+      className={`${fontSelectValue} flex flex-col items-center gap-2 bg-gray-100 min-h-screen h-full dark:bg-gray-800 pt-4`}
     >
-      <div className="text-xl w-2/3 h-14 flex items-center justify-center gap-12">
-        <BookIcon darkMode={theme === "dark"} />
+      <div className="text-xl min-w-min w-2/3 md:w-1/2 xl:w-1/4 h-14 flex items-center justify-between">
+        <BookIcon isDarkMode={theme === "dark"} />
         <select
           value={fontSelectValue}
           onChange={handleFontChange}
-          className="bg-gray-50 text-sm md:text-lg rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300 p-2.5 dark:bg-gray-700"
+          className="bg-gray-50 text-sm md:text-lg rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300 p-2.5 dark:bg-gray-700 border shadow-md mr-2"
         >
           <option value="font-serif">Serif</option>
           <option value="font-sans">Sans</option>
@@ -177,7 +177,7 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
         </select>
         <button
           onClick={toggleDarkMode}
-          className="w-10 h-10 p-1 rounded-full flex justify-center items-center border"
+          className="w-10 h-10 p-1 rounded-full flex justify-center items-center border shadow-md"
         >
           {theme === "dark" ? <MoonIcon /> : <SunIcon />}
         </button>
@@ -185,17 +185,18 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
       <form
         action="submit"
         onSubmit={(e) => handleSubmit(e, inputSearchValue)}
-        className="min-w-min w-2/3 md:w-1/2 xl:w-1/4 dark:bg-gray-600 rounded-full"
+        className="min-w-min w-2/3 md:w-1/2 xl:w-1/4 dark:bg-gray-600 rounded-full mt-4"
       >
         <div className="relative flex items-center h-10 ">
           <input
-            className="w-full h-full shadow-sm border rounded-lg border-gray-200 px-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
+            className="w-full h-full shadow-lg border rounded-lg border-gray-200 px-3 focus:outline-none focus:ring-2 focus:ring-purple-300"
             type="text"
             value={inputSearchValue}
             onChange={handleChange}
           />
           <button type="submit" className="flex items-center">
             <SearchIcon
+              isDarkMode={theme === "dark"}
               styling={"absolute w-5 h-5 right-0 mr-3 cursor-pointer"}
             />
           </button>
@@ -203,9 +204,14 @@ const DictionaryEntry: FC<dictionaryEntryProps> = (props) => {
       </form>
 
       {props.isError ? (
-        <p className="text-xl mt-5">{searchValue} was not found.</p>
+        <p className="text-xl mt-5">
+          <span className="dark:text-purple-400 text-purple-700">
+            {searchValue}
+          </span>{" "}
+          was not found.
+        </p>
       ) : (
-        <div className="xs:w-max sm:w-3/4 lg:w-1/2 2xl:w-1/3 m-3 sm:border sm:border-purple-200 sm:rounded-md dark:bg-gray-700">
+        <div className="shadow-lg xs:w-max sm:w-3/4 lg:w-1/2 2xl:w-1/3 m-3 sm:border sm:border-purple-200 sm:rounded-md dark:bg-gray-700">
           {renderResult()}
         </div>
       )}
