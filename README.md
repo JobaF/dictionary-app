@@ -9,9 +9,11 @@
 --> Next.js / React.js <br>
 --> TailwindCSS <br>
 --> Hosting: Vercel <br>
---> Libraries: use-sound, next-progressbar, zod, ReactQuery
+--> Libraries: use-sound, next-progressbar, zod, ReactQuery <br>
 --> Dictionary API
 
 <h2>Screenshot of the Project 📸</h2>
 <br>
-![Bildschirmfoto 2023-05-31 um 11 33 53](https://github.com/JobaF/dictionary-app/assets/57532845/f9521350-06f4-49a1-9c37-70956859ebb7)
+<div align='center'>
+<img src="https://github.com/JobaF/dictionary-app/assets/57532845/355fdb62-5aef-47a0-8a60-35444d365fbe" />
+</div>
